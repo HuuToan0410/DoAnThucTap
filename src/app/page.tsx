@@ -54,7 +54,7 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Logo" className="h-10" />
             <h1 className="font-bold uppercase">
-              Trường Đại học Nguyễn Tất Thành
+              Trường Cao Đẳng Nghề Thành Phố Hồ Chí Minh
             </h1>
           </div>
 
@@ -129,7 +129,7 @@ export default function HomePage() {
 
       {/* ==== FOOTER ==== */}
       <footer className="bg-blue-900 text-white text-center py-4 text-sm mt-auto">
-        © 2025 Trường Đại học Nguyễn Tất Thành - Phòng Quản lý Đào tạo
+        © 2025 Trường Cao Đẳng Nghề Thành Phố Hồ Chí Minh - Phòng Quản lý Đào tạo
       </footer>
     </div>
   );
