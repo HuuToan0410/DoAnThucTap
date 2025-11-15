@@ -1,4 +1,6 @@
 "use client";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
 import {
@@ -19,21 +21,39 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
+  const { data: session } = useSession();
+const router = useRouter();
 
-    // Simulate login
-    setTimeout(() => {
-      if (email && password) {
-        alert("Login functionality requires backend integration");
-      } else {
-        setError("Vui lòng điền đầy đủ thông tin!");
-      }
-      setIsLoading(false);
-    }, 1000);
-  };
+// ✅ Nếu đã đăng nhập → tự điều hướng đúng role
+useEffect(() => {
+  if (session?.user?.role === "ADMIN") {
+    router.push("/admin/dashboard");
+  } else if (session?.user?.role === "LECTURER") {
+    router.push("/lecturer/dashboard");
+  } else if (session?.user?.role === "STUDENT") {
+    router.push("/student/dashboard");
+  }
+}, [session, router]);
+
+// ✅ Logic xử lý đăng nhập thật
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setIsLoading(true);
+
+  const res = await signIn("credentials", {
+    email,
+    password,
+    redirect: false,
+  });
+
+  if (res?.error) {
+    setError("Sai email hoặc mật khẩu");
+    setIsLoading(false);
+  } else {
+    router.push("/dashboard");
+  }
+};
 
   const announcements = [
     {
