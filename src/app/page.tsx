@@ -14,6 +14,7 @@ import {
   Clock,
   Pin,
 } from "lucide-react";
+import path from "path";
 
 export default function HomePage() {
   const [email, setEmail] = useState("");
@@ -95,10 +96,10 @@ const handleSubmit = async (e) => {
   ];
 
   const quickLinks = [
-    { icon: Calendar, label: "Thời khóa biểu", color: "bg-blue-500" },
-    { icon: BookOpen, label: "Kết quả học tập", color: "bg-green-500" },
-    { icon: Users, label: "Lớp học phần", color: "bg-purple-500" },
-    { icon: Award, label: "Chứng chỉ", color: "bg-orange-500" },
+    { icon: Calendar, label: "Thời khóa biểu", color: "bg-blue-500", path: "/student/timetable" },
+    { icon: Calendar, label: "Lịch thi", color: "bg-green-500",path: "/student/exam" },
+    { icon: BookOpen, label: "Xem kế hoạch", color: "bg-purple-500",path: "/student/plan" },
+    // { icon: Award, label: "Chứng chỉ", color: "bg-orange-500" },
   ];
 
   return (
@@ -132,12 +133,7 @@ const handleSubmit = async (e) => {
               >
                 <span>Trang chủ</span>
               </a>
-              <a href="#" className="hover:text-yellow-300 transition">
-                Giới thiệu
-              </a>
-              <a href="#" className="hover:text-yellow-300 transition">
-                Liên hệ
-              </a>
+             
             </nav>
           </div>
         </div>
@@ -154,10 +150,11 @@ const handleSubmit = async (e) => {
                 <BookOpen className="h-5 w-5 text-blue-600" />
                 Truy cập nhanh
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {quickLinks.map((link, idx) => (
                   <button
                     key={idx}
+                    onClick={() => router.push(link.path)}
                     className="flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-gray-50 transition group"
                   >
                     <div
