@@ -18,15 +18,15 @@ export default function AdminExamPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("");
 
-  // ✔ LẤY DỮ LIỆU API — giữ nguyên nhưng theo logic code dưới
+  //  LẤY DỮ LIỆU API — giữ nguyên nhưng theo logic code dưới
   useEffect(() => {
     fetch("/api/exam")
       .then((res) => res.json())
       .then((data) => setExams(data));
   }, []);
 
-  // ✔ THÊM MỚI — thay logic giống code dưới
-  const handleSubmit = async (e) => {
+  //  THÊM MỚI — thay logic giống code dưới
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     const res = await fetch("/api/exam", {
@@ -50,7 +50,7 @@ export default function AdminExamPage() {
     });
   };
 
-  // ✔ XÓA — logic giống code dưới
+  //  XÓA — logic giống code dưới
   const handleDelete = async (id) => {
     if (!confirm("Bạn có chắc muốn xóa lịch thi này?")) return;
 
