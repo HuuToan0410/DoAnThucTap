@@ -52,17 +52,17 @@ export default function AdminDashboard() {
         setPlanData([
           {
             name: "Đang học",
-            value: planRes.filter((p) => p.status === "Đang học").length,
+            value: planRes.filter((p: any) => p.status === "Đang học").length,
             color: "#10b981",
           },
           {
             name: "Sắp tới",
-            value: planRes.filter((p) => p.status === "Sắp tới").length,
+            value: planRes.filter((p: any) => p.status === "Sắp tới").length,
             color: "#f59e0b",
           },
           {
             name: "Đã kết thúc",
-            value: planRes.filter((p) => p.status === "Đã kết thúc").length,
+            value: planRes.filter((p: any) => p.status === "Đã kết thúc").length,
             color: "#6b7280",
           },
         ]);
