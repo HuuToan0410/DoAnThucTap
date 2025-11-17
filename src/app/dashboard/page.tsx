@@ -124,7 +124,9 @@ export default function AdminDashboard() {
         </h2>
 
         {planData.length === 0 ? (
-          <p className="text-gray-500 italic text-center">Chưa có dữ liệu kế hoạch.</p>
+          <p className="text-gray-500 italic text-center">
+            Chưa có dữ liệu kế hoạch.
+          </p>
         ) : (
           <ResponsiveContainer width="100%" height={320}>
             <PieChart>
@@ -133,15 +135,19 @@ export default function AdminDashboard() {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) =>
-                  `${name} ${(percent * 100).toFixed(0)}%`
+                label={
+                  (({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`) as any
                 }
                 outerRadius={120}
                 fill="#8884d8"
                 dataKey="value"
               >
                 {planData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index % colors.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip />
