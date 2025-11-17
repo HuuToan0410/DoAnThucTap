@@ -47,24 +47,16 @@ export const authOptions: NextAuthOptions = {
     },
 
     // ✅ Phần này thêm mới — điều hướng sau đăng nhập
-    async redirect({ url, baseUrl }) {
-      // Nếu người dùng truy cập từ trong site, giữ nguyên
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
+    async redirect({ url, baseUrl, token }) {
+  if (url.startsWith("/")) return `${baseUrl}${url}`;
+  if (!token?.user?.role) return baseUrl;
 
-      // Gọi lại API để lấy session hiện tại
-      try {
-        const res = await fetch(`${baseUrl}/api/auth/session`);
-        const session = await res.json();
+  if (token.user.role === "ADMIN") return `${baseUrl}/admin/dashboard`;
+  if (token.user.role === "LECTURER") return `${baseUrl}/lecturer/dashboard`;
+  if (token.user.role === "STUDENT") return `${baseUrl}/student/dashboard`;
 
-        if (session?.user?.role === "ADMIN") return `${baseUrl}/admin/dashboard`;
-        if (session?.user?.role === "LECTURER") return `${baseUrl}/lecturer`;
-        if (session?.user?.role === "STUDENT") return `${baseUrl}/student`;
-      } catch (err) {
-        console.error("Redirect failed:", err);
-      }
+  return baseUrl;
+}
 
-      // Nếu không có role → quay về trang chủ
-      return baseUrl;
-    },
   },
 };
