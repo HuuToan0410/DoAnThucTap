@@ -3,8 +3,17 @@
 import { useState, useEffect } from "react";
 import { BookOpen, Plus, Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
 
+interface Plan {
+  _id?: string;
+  semester: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  description: string;
+}
+
 export default function AdminPlanPage() {
-  const [plans, setPlans] = useState([]);
+  const [plans, setPlans] = useState<Plan[]>([]);
   const [form, setForm] = useState({
     semester: "",
     startDate: "",
@@ -17,11 +26,11 @@ export default function AdminPlanPage() {
   useEffect(() => {
     fetch("/api/plan")
       .then((res) => res.json())
-      .then((data) => setPlans(data));
+      .then((data: Plan[]) => setPlans(data));
   }, []);
 
   // ✔ SUBMIT FORM — giống code dưới
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const res = await fetch("/api/plan", {
@@ -31,7 +40,7 @@ export default function AdminPlanPage() {
     });
 
     const newPlan = await res.json();
-    setPlans([...plans, newPlan]);
+    setPlans([...plans, newPlan as Plan]);
 
     setForm({
       semester: "",
@@ -42,7 +51,7 @@ export default function AdminPlanPage() {
     });
   };
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case "Đang học":
         return <CheckCircle className="h-5 w-5 text-green-500" />;
@@ -55,7 +64,7 @@ export default function AdminPlanPage() {
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "Đang học":
         return "bg-green-100 text-green-700 border-green-200";
@@ -173,7 +182,7 @@ export default function AdminPlanPage() {
 
       {/* Plans List — giữ nguyên UI */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {plans.map((plan) => (
+        {plans.map((plan: Plan) => (
           <div
             key={plan._id}
             className={`bg-white rounded-xl shadow-md overflow-hidden border-2 hover:shadow-lg transition ${

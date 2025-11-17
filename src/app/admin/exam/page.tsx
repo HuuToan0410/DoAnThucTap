@@ -2,19 +2,32 @@
 
 import { useState, useEffect } from "react";
 import { FileText, Plus, Search, Filter, Download, Trash2, Calendar, Clock, MapPin } from "lucide-react";
+type Exam = {
+  _id: string;
+  date: string;
+  time: string;
+  room: string;
+  subject: string;
+  classCode: string;
+  teacher: string;
+  type: string;
+  duration: string;
+};
 
 export default function AdminExamPage() {
-  const [exams, setExams] = useState([]);
-  const [form, setForm] = useState({
-    date: "",
-    time: "",
-    room: "",
-    subject: "",
-    classCode: "",
-    teacher: "",
-    type: "",
-    duration: "",
-  });
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [form, setForm] = useState<Partial<Exam>>({
+  date: "",
+  time: "",
+  room: "",
+  subject: "",
+  classCode: "",
+  teacher: "",
+  type: "",
+  duration: "",
+});
+  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("");
 
@@ -51,7 +64,7 @@ export default function AdminExamPage() {
   };
 
   //  XÓA — logic giống code dưới
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc muốn xóa lịch thi này?")) return;
 
     await fetch("/api/exam", {
@@ -76,12 +89,16 @@ export default function AdminExamPage() {
   });
 
   // Group theo ngày — giữ nguyên UI
-  const groupedExams = filteredExams.reduce((acc, exam) => {
+  const groupedExams = filteredExams.reduce<Record<string, Exam[]>>(
+  (acc, exam) => {
     const date = exam.date;
     if (!acc[date]) acc[date] = [];
     acc[date].push(exam);
     return acc;
-  }, {});
+  },
+  {}
+);
+
 
   return (
     <div className="space-y-6">
@@ -280,7 +297,7 @@ export default function AdminExamPage() {
                 </thead>
 
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {dateExams.map((exam) => (
+                  {(dateExams as Exam[]).map((exam) => (
                     <tr key={exam._id} className="hover:bg-gray-50 transition">
                       <td className="px-4 py-3 text-sm text-gray-600 font-medium">{exam.time}</td>
                       <td className="px-4 py-3 text-sm text-gray-600 text-center">

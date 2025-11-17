@@ -2,39 +2,60 @@
 
 import { useEffect, useState } from "react";
 import { Calendar, Search, Plus, Edit2, Trash2, Filter, Download, X, Save } from "lucide-react";
+import { startTransition } from "react";
+
+interface Timetable {
+  _id: string;
+  week: string;
+  day: string;
+  period: string;
+  subject: string;
+  teacher: string;
+  room: string;
+  type: string;
+  classCode: string;
+}
+
 
 export default function AdminTimetablePage() {
-  const [timetables, setTimetables] = useState([]);
-  const [form, setForm] = useState({
-    week: "",
-    day: "",
-    period: "",
-    subject: "",
-    teacher: "",
-    room: "",
-    type: "",
-    classCode: "",
-  });
+  const [timetables, setTimetables] = useState<Timetable[]>([]);
+  const [form, setForm] = useState<Partial<Timetable>>({
+  week: "",
+  day: "",
+  period: "",
+  subject: "",
+  teacher: "",
+  room: "",
+  type: "",
+  classCode: "",
+});
 
-  const [editing, setEditing] = useState(null);
+
+  const [editing, setEditing] = useState<Timetable | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("");
 
   // Auto-generate day from week
   useEffect(() => {
-    if (!form.week) return;
+  if (!form.week) return;
 
-    const selectedDate = new Date(form.week + "T00:00:00");
-    const weekdayName = selectedDate
-      .toLocaleDateString("vi-VN", { weekday: "long" })
-      .replace(/^\w/, (c) => c.toUpperCase());
-    const formattedDate = selectedDate
-      .toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" })
-      .replace(/\//g, "-");
+  const selectedDate = new Date(form.week + "T00:00:00");
 
-    const formatted = `${weekdayName}, ${formattedDate}`;
+  const weekdayName = selectedDate
+    .toLocaleDateString("vi-VN", { weekday: "long" })
+    .replace(/^\w/, (c) => c.toUpperCase());
+
+  const formattedDate = selectedDate
+    .toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" })
+    .replace(/\//g, "-");
+
+  const formatted = `${weekdayName}, ${formattedDate}`;
+
+  startTransition(() => {
     setForm((prev) => ({ ...prev, day: formatted }));
-  }, [form.week]);
+  });
+}, [form.week]);
+
 
   // Fetch data
   useEffect(() => {
@@ -45,7 +66,7 @@ export default function AdminTimetablePage() {
   }, []);
 
   // ✔ THAY ĐỔI LOGIC handleSubmit (dùng form onSubmit)
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await fetch("/api/timetable", {
@@ -72,7 +93,7 @@ export default function AdminTimetablePage() {
   };
 
   // Delete
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc muốn xóa tiết học này không?")) return;
     try {
       await fetch("/api/timetable", {
@@ -87,12 +108,12 @@ export default function AdminTimetablePage() {
   };
 
   
-  const handleEdit = (item) => {
+  const handleEdit = (item: Timetable) => {
     setEditing({ ...item });
   };
 
  
-  const handleUpdate = async (e) => {
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const res = await fetch("/api/timetable", {
@@ -111,7 +132,7 @@ export default function AdminTimetablePage() {
   };
 
   // Filter logic
-  const filteredTimetables = timetables.filter((item) => {
+  const filteredTimetables = timetables.filter((item: Timetable) => {
     const matchesSearch =
       item.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.teacher?.toLowerCase().includes(searchTerm.toLowerCase()) ||

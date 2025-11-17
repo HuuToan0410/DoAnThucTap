@@ -11,17 +11,15 @@ import {
   AlertCircle,
   Activity,
 } from "lucide-react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 import Protected from "@/components/Protected";
 import DashboardLayout from "@/components/dashboards/DashboardLayout";
 
+type Plan = {
+  _id?: string;
+  status: string;
+};
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ timetables: 0, exams: 0, plans: 0 });
 
@@ -37,11 +35,11 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [timetableRes, examRes, planRes] = await Promise.all([
+        const [timetableRes, examRes, planRes] = (await Promise.all([
           fetch("/api/timetable").then((r) => r.json()),
           fetch("/api/exam").then((r) => r.json()),
           fetch("/api/plan").then((r) => r.json()),
-        ]);
+        ])) as [unknown[], unknown[], Plan[]];
 
         setStats({
           timetables: timetableRes.length,
@@ -52,17 +50,17 @@ export default function AdminDashboard() {
         setPlanData([
           {
             name: "Đang học",
-            value: planRes.filter((p: any) => p.status === "Đang học").length,
+            value: planRes.filter((p) => p.status === "Đang học").length,
             color: "#10b981",
           },
           {
             name: "Sắp tới",
-            value: planRes.filter((p: any) => p.status === "Sắp tới").length,
+            value: planRes.filter((p) => p.status === "Sắp tới").length,
             color: "#f59e0b",
           },
           {
             name: "Đã kết thúc",
-            value: planRes.filter((p: any) => p.status === "Đã kết thúc").length,
+            value: planRes.filter((p) => p.status === "Đã kết thúc").length,
             color: "#6b7280",
           },
         ]);
@@ -79,7 +77,6 @@ export default function AdminDashboard() {
   // ==========================
   const DashboardContent = (
     <div className="space-y-6 mt-8 mb-14">
-
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
         <div className="flex items-center justify-between">

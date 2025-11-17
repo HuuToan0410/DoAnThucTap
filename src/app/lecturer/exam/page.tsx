@@ -4,8 +4,20 @@ import Protected from "@/components/Protected";
 import { useEffect, useState } from "react";
 import { Calendar, Clock, MapPin, Users, AlertTriangle, CheckCircle, Download, Search, BookOpen, FileText } from "lucide-react";
 
+type Exam = {
+  _id?: string;
+  subject?: string;
+  room?: string;
+  classCode?: string;
+  date?: string;
+  time?: string;
+  duration?: string;
+  type?: string;
+};
+
+
 export default function LecturerExamPage() {
-  const [exams, setExams] = useState([]);
+  const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -22,13 +34,13 @@ export default function LecturerExamPage() {
       });
   }, []);
 
-  const filteredExams = exams.filter((exam) =>
+  const filteredExams = exams.filter((exam: Exam) =>
     exam.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     exam.room?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     exam.classCode?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const groupedExams = filteredExams.reduce((acc, exam) => {
+  const groupedExams = filteredExams.reduce((acc: Record<string, Exam[]>, exam: Exam) => {
     const date = exam.date || "Chưa xác định";
     if (!acc[date]) acc[date] = [];
     acc[date].push(exam);
@@ -38,19 +50,19 @@ export default function LecturerExamPage() {
   const getDaysUntil = (examDate) => {
     const today = new Date();
     const exam = new Date(examDate);
-    const diffTime = exam - today;
+    const diffTime = exam.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
 
-  const getUrgencyColor = (days) => {
+  const getUrgencyColor = (days: number) => {
     if (days < 0) return "bg-gray-100 text-gray-700 border-gray-200";
     if (days <= 3) return "bg-pink-100 text-pink-700 border-pink-200";
     if (days <= 7) return "bg-orange-100 text-orange-700 border-orange-200";
     return "bg-purple-100 text-purple-700 border-purple-200";
   };
 
-  const getUrgencyIcon = (days) => {
+  const getUrgencyIcon = (days: number) => {
     if (days < 0) return <CheckCircle className="h-5 w-5" />;
     if (days <= 7) return <AlertTriangle className="h-5 w-5" />;
     return <Clock className="h-5 w-5" />;
@@ -171,7 +183,7 @@ export default function LecturerExamPage() {
                   </div>
 
                   <div className="p-6 space-y-4">
-                    {dateExams.map((exam) => (
+                    {(dateExams as Exam[]).map((exam) => (
                       <div
                         key={exam._id}
                         className={`border-2 rounded-lg p-4 ${

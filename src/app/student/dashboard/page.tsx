@@ -14,6 +14,16 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+type StatCardProps = {
+  icon: React.ComponentType<any>;
+  title: string;
+  value: any;
+  color: string;
+  bgColor: string;
+  subtitle?: string;
+};
+
+
 export default function StudentDashboard() {
   const [stats, setStats] = useState({ timetables: 0, exams: 0 });
   const [loading, setLoading] = useState(true);
@@ -38,7 +48,7 @@ export default function StudentDashboard() {
     fetchStats();
   }, []);
 
-  const StatCard = ({ icon: Icon, title, value, color, bgColor, subtitle }) => (
+  const StatCard = ({ icon: Icon, title, value, color, bgColor, subtitle }: StatCardProps) => (
     <div
       className="bg-white rounded-xl shadow-md p-6 border-l-4 hover:shadow-lg transition-shadow"
       style={{ borderLeftColor: color }}

@@ -3,8 +3,21 @@ import Protected from "@/components/Protected";
 import { useEffect, useState } from "react";
 import { Calendar, Clock, MapPin, User, AlertTriangle, CheckCircle, Download, Search, BookOpen } from "lucide-react";
 
+type Exam = {
+  _id?: string;
+  subject?: string;
+  teacher?: string;
+  room?: string;
+  date?: string;
+  time?: string;
+  duration?: string;
+  type?: string;
+  classCode?: string;
+};
+
+
 export default function StudentExamPage() {
-  const [exams, setExams] = useState([]);
+  const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -27,12 +40,16 @@ export default function StudentExamPage() {
     exam.room?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const groupedExams = filteredExams.reduce((acc, exam) => {
+  const groupedExams = filteredExams.reduce<Record<string, Exam[]>>(
+  (acc, exam) => {
     const date = exam.date || "Chưa xác định";
     if (!acc[date]) acc[date] = [];
     acc[date].push(exam);
     return acc;
-  }, {});
+  },
+  {}
+);
+
 
   const getDaysUntil = (examDate) => {
     const today = new Date();

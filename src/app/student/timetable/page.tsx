@@ -3,8 +3,21 @@ import Protected from "@/components/Protected";
 import { useEffect, useState } from "react";
 import { Calendar, Clock, MapPin, User, BookOpen, Search, Filter, Download } from "lucide-react";
 
+type Timetable = {
+  _id?: string;
+  subject?: string;
+  teacher?: string;
+  room?: string;
+  type?: string;
+  week?: string;
+  day?: string;
+  period?: string | number;
+};
+
+
 export default function StudentTimetablePage() {
-  const [timetables, setTimetables] = useState([]);
+  const [timetables, setTimetables] = useState<Timetable[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterDay, setFilterDay] = useState("");

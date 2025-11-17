@@ -28,7 +28,7 @@ export default function LecturerDashboard() {
     fetchStats();
   }, []);
 
-  const StatCard = ({ icon: Icon, title, value, color, bgColor, subtitle }) => (
+  const StatCard = ({ icon: Icon, title, value, color, bgColor, subtitle }: any) => (
     <div className="bg-white rounded-xl shadow-md p-6 border-l-4 hover:shadow-lg transition-shadow" style={{ borderLeftColor: color }}>
       <div className="flex items-center justify-between">
         <div className="flex-1">
