@@ -26,7 +26,7 @@ export default function AdminExamPage() {
   }, []);
 
   //  THÊM MỚI — thay logic giống code dưới
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const res = await fetch("/api/exam", {
