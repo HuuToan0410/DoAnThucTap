@@ -136,8 +136,13 @@ export default function AdminDashboard() {
                 cy="50%"
                 labelLine={false}
                 label={
-                  (({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`) as any
+                  ((props) => {
+                    const { name, percent } = props as {
+                      name: string;
+                      percent: number;
+                    };
+                    return `${name} ${(percent * 100).toFixed(0)}%`;
+                  }) as unknown as any
                 }
                 outerRadius={120}
                 fill="#8884d8"
