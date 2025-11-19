@@ -8,7 +8,37 @@ import { authOptions } from "@/lib/auth";
 export async function POST(req: NextRequest) {
   await dbConnect();
 
-  // ✅ getServerSession phải đặt bên trong POST
+  const { email, name, password, role } = await req.json();
+
+  // --- Kiểm tra nếu database chưa có user nào ---
+  const userCount = await User.countDocuments();
+
+  // Nếu chưa có ai => cho phép tạo ADMIN đầu tiên
+  if (userCount === 0) {
+    if (role !== "ADMIN") {
+      return NextResponse.json(
+        { error: "User đầu tiên phải là ADMIN" },
+        { status: 400 }
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const admin = await User.create({
+      email,
+      name,
+      passwordHash,
+      role: "ADMIN",
+    });
+
+    return NextResponse.json({
+      ok: true,
+      message: "Tạo ADMIN đầu tiên thành công",
+      user: admin,
+    });
+  }
+
+  // --- Nếu đã có user trong database -> yêu cầu đăng nhập ---
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -18,9 +48,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { email, name, password, role } = await req.json();
-
-  // Kiểm tra quyền tạo ADMIN
+  // Chỉ ADMIN được tạo tài khoản ADMIN mới
   if (role === "ADMIN" && session.user.role !== "ADMIN") {
     return NextResponse.json(
       { error: "Không có quyền tạo admin" },
@@ -37,10 +65,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Hash password
   const passwordHash = await bcrypt.hash(password, 10);
 
-  // Tạo user mới
   const user = await User.create({
     email,
     name,
@@ -51,9 +77,9 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ ok: true, user });
 }
 
+
 export async function GET() {
   await dbConnect();
-
   const users = await User.find().lean();
   return NextResponse.json({ ok: true, users });
 }
