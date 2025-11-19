@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
 
     // ❗ NextAuth v5: redirect KHÔNG nhận token
     async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      //if (url.startsWith("/")) return `${baseUrl}${url}`;
       return baseUrl;
     },
   },
