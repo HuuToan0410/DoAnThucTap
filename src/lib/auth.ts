@@ -14,11 +14,14 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
+
         await dbConnect();
         const user = await User.findOne({ email: credentials.email });
         if (!user) return null;
+
         const isValid = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!isValid) return null;
+
         return {
           id: user._id.toString(),
           email: user.email,
@@ -41,22 +44,16 @@ export const authOptions: NextAuthOptions = {
       if (user) token.user = user;
       return token;
     },
+
     async session({ session, token }) {
-      session.user = token.user as any;
+      if (token.user) session.user = token.user;
       return session;
     },
 
-    // ✅ Phần này thêm mới — điều hướng sau đăng nhập
-    async redirect({ url, baseUrl, token }) {
-  if (url.startsWith("/")) return `${baseUrl}${url}`;
-  if (!token?.user?.role) return baseUrl;
-
-  if (token.user.role === "ADMIN") return `${baseUrl}/admin/dashboard`;
-  if (token.user.role === "LECTURER") return `${baseUrl}/lecturer/dashboard`;
-  if (token.user.role === "STUDENT") return `${baseUrl}/student/dashboard`;
-
-  return baseUrl;
-}
-
+    // ❗ NextAuth v5: redirect KHÔNG nhận token
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      return baseUrl;
+    },
   },
 };
