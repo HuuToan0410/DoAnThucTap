@@ -3,7 +3,11 @@
 import { useSession } from "next-auth/react";
 import { GraduationCap, Bell } from "lucide-react";
 
-export default function Topbar() {
+type TopbarProps = {
+  onMenuClick?: () => void;
+};
+
+export default function Topbar({ onMenuClick }: TopbarProps) {
   const { data: session } = useSession();
 
   const getRoleBadgeColor = (role: string) => {
@@ -36,6 +40,13 @@ export default function Topbar() {
     <header className="flex items-center justify-between bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg px-6 py-4">
       {/* Left Section - Logo & Title */}
       <div className="flex items-center gap-3">
+         <button
+          onClick={onMenuClick}       
+          className="md:hidden block bg-white/20 p-2 rounded-lg"
+        >
+          {/* icon menu */}
+          ☰
+        </button>
         <div className="bg-white/20 backdrop-blur-sm p-2 rounded-lg">
           <GraduationCap size={28} />
         </div>
