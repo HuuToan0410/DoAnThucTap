@@ -16,16 +16,27 @@ export default function Protected({
 
   useEffect(() => {
     if (status === "loading") return;
+
+    // ❌ Chưa đăng nhập → chuyển login
     if (!session) {
-      router.push("/login");
+      router.replace("/login");
       return;
     }
 
-    const userRole = session.user?.role;
-    if (!allowedRoles.includes(userRole)) {
-      router.push("/unauthorized");
+    const role = session.user?.role;
+
+    // ❌ Không có role → cũng xem như không hợp lệ
+    if (!role) {
+      router.replace("/unauthorized");
+      return;
     }
-  }, [session, status, router, allowedRoles]);
+
+    // ❌ Role không nằm trong danh sách được phép
+    if (!allowedRoles.includes(role)) {
+      router.replace("/unauthorized");
+      return;
+    }
+  }, [session, status, allowedRoles, router]);
 
   if (status === "loading") {
     return (
