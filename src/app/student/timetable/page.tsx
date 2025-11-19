@@ -6,11 +6,14 @@ import { Calendar, Clock, MapPin, User, BookOpen, Search, Filter, Download } fro
 type Timetable = {
   _id?: string;
   subject?: string;
+  teacher?: string;   
   classCode?: string;
   room?: string;
   day?: string;
   period?: string;
   week?: string;
+  type?: string;      
+  duration?: string;  
 };
 
 
