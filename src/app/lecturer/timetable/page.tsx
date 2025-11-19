@@ -4,8 +4,20 @@ import Protected from "@/components/Protected";
 import { useEffect, useState } from "react";
 import { Calendar, Clock, MapPin, Users, BookOpen, Search, Filter, Download, FileText } from "lucide-react";
 
+
+type TimetableItem = {
+  _id?: string;
+  subject?: string;
+  room?: string;
+  classCode?: string;
+  day?: string;
+  week?: string;
+  period?: string;
+  type?: string;
+};
+
 export default function LecturerTimetablePage() {
-  const [timetables, setTimetables] = useState([]);
+  const [timetables, setTimetables] = useState<TimetableItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterDay, setFilterDay] = useState("");
@@ -32,12 +44,17 @@ export default function LecturerTimetablePage() {
     return matchesSearch && matchesDay;
   });
 
-  const groupedByWeek = filteredTimetables.reduce((acc, item) => {
+  const groupedByWeek = filteredTimetables.reduce(
+  (acc: Record<string, any[]>, item: any) => {
     const week = item.week || "Chưa xác định";
+
     if (!acc[week]) acc[week] = [];
     acc[week].push(item);
     return acc;
-  }, {});
+  },
+  {} as Record<string, any[]>
+);
+
 
   const weekDays = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"];
 
