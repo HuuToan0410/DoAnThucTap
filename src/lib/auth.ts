@@ -40,20 +40,25 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) token.user = user;
-      return token;
-    },
-
-    async session({ session, token }) {
-      if (token.user) session.user = token.user;
-      return session;
-    },
-
-    // ❗ NextAuth v5: redirect KHÔNG nhận token
-    async redirect({ url, baseUrl }) {
-      //if (url.startsWith("/")) return `${baseUrl}${url}`;
-      return baseUrl;
-    },
+  async jwt({ token, user }) {
+    if (user) {
+      token.id = user.id;
+      token.email = user.email;
+      token.name = user.name;
+      token.role = user.role;
+    }
+    return token;
   },
+
+  async session({ session, token }) {
+    session.user = {
+      id: token.id,
+      name: token.name,
+      email: token.email,
+      role: token.role,
+    };
+    return session;
+  },
+}
+
 };

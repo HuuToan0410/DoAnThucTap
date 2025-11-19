@@ -15,6 +15,9 @@ export default function Protected({
   const router = useRouter();
 
   useEffect(() => {
+    console.log("SESSION FROM PROTECTED:", session?.user);
+    console.log("allowedRoles:", allowedRoles);
+
     if (status === "loading") return;
 
     // ❌ Chưa đăng nhập → chuyển login
@@ -25,6 +28,7 @@ export default function Protected({
 
     const role = session.user?.role;
 
+    
     // ❌ Không có role → cũng xem như không hợp lệ
     if (!role) {
       router.replace("/unauthorized");
@@ -36,6 +40,7 @@ export default function Protected({
       router.replace("/unauthorized");
       return;
     }
+    
   }, [session, status, allowedRoles, router]);
 
   if (status === "loading") {
