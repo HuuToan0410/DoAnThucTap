@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema(
 UserSchema.index({ email: 1 }, { unique: true });
 UserSchema.index({ role: 1 });
 UserSchema.index({ classCode: 1 });
-UserSchema.index({ name: "text" }); // hỗ trợ tìm kiếm tên
+UserSchema.index({ name: "text" }); 
 UserSchema.index({ createdAt: -1 });
 
 export default mongoose.models.User || mongoose.model("User", UserSchema);
