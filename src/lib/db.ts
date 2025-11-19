@@ -13,13 +13,11 @@ interface MongooseCache {
   promise: Promise<Mongoose> | null;
 }
 
-// Khai báo global để TypeScript không báo lỗi
 const globalWithMongoose = globalThis as typeof globalThis & {
   _mongoose?: MongooseCache;
 };
 
-// Giữ kết nối (cache) để tránh bị tạo nhiều connection trong dev mode
-let cached = globalWithMongoose._mongoose;
+let cached: MongooseCache = globalWithMongoose._mongoose!;
 
 if (!cached) {
   cached = globalWithMongoose._mongoose = { conn: null, promise: null };
@@ -27,11 +25,13 @@ if (!cached) {
 
 export async function dbConnect() {
   if (cached.conn) return cached.conn;
+
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI, {
       dbName: "tkb_edu",
     });
   }
+
   cached.conn = await cached.promise;
   return cached.conn;
 }
