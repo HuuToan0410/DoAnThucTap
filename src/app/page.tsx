@@ -25,7 +25,7 @@ export default function HomePage() {
   const { data: session } = useSession();
 const router = useRouter();
 
-// ✅ Nếu đã đăng nhập → tự điều hướng đúng role
+//  Nếu đã đăng nhập → tự điều hướng đúng role
 useEffect(() => {
   if (session?.user?.role === "ADMIN") {
     router.push("/admin/dashboard");
@@ -36,8 +36,8 @@ useEffect(() => {
   }
 }, [session, router]);
 
-// ✅ Logic xử lý đăng nhập thật
-const handleSubmit = async (e) => {
+//  Logic xử lý đăng nhập thật
+const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
   setError("");
   setIsLoading(true);
