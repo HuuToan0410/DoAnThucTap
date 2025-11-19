@@ -47,7 +47,7 @@ export default function LecturerExamPage() {
     return acc;
   }, {});
 
-  const getDaysUntil = (examDate) => {
+  const getDaysUntil = (examDate: string) => {
     const today = new Date();
     const exam = new Date(examDate);
     const diffTime = exam.getTime() - today.getTime();
@@ -106,7 +106,7 @@ export default function LecturerExamPage() {
                 <p className="text-sm text-gray-600 mb-1">Sắp diễn ra (7 ngày)</p>
                 <p className="text-2xl font-bold text-gray-800">
                   {exams.filter(e => {
-                    const days = getDaysUntil(e.date);
+                    const days = getDaysUntil(e.date as string);
                     return days >= 0 && days <= 7;
                   }).length}
                 </p>
@@ -119,7 +119,7 @@ export default function LecturerExamPage() {
               <div>
                 <p className="text-sm text-gray-600 mb-1">Đã hoàn thành</p>
                 <p className="text-2xl font-bold text-gray-800">
-                  {exams.filter(e => getDaysUntil(e.date) < 0).length}
+                  {exams.filter(e => getDaysUntil(e.date as string) < 0).length}
                 </p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-500" />
