@@ -1,6 +1,7 @@
 "use client";
 import Protected from "@/components/Protected";
 import { useEffect, useState } from "react";
+
 import { Calendar, Clock, MapPin, User, AlertTriangle, CheckCircle, Download, Search, BookOpen } from "lucide-react";
 
 type Exam = {
@@ -51,22 +52,26 @@ export default function StudentExamPage() {
 );
 
 
-  const getDaysUntil = (examDate) => {
+  const getDaysUntil = (examDate: string | undefined): number => {
+    if (!examDate) return 0;
+
     const today = new Date();
     const exam = new Date(examDate);
-    const diffTime = exam - today;
+    const diffTime = exam.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
+  
 
-  const getUrgencyColor = (days) => {
+
+  const getUrgencyColor = (days: number): string => {
     if (days < 0) return "bg-gray-100 text-gray-700 border-gray-200";
     if (days <= 3) return "bg-red-100 text-red-700 border-red-200";
     if (days <= 7) return "bg-orange-100 text-orange-700 border-orange-200";
     return "bg-green-100 text-green-700 border-green-200";
   };
 
-  const getUrgencyIcon = (days) => {
+  const getUrgencyIcon = (days: number) => {
     if (days < 0) return <CheckCircle className="h-5 w-5" />;
     if (days <= 7) return <AlertTriangle className="h-5 w-5" />;
     return <Clock className="h-5 w-5" />;
