@@ -6,13 +6,13 @@ import { Calendar, Clock, MapPin, User, BookOpen, Search, Filter, Download } fro
 type Timetable = {
   _id?: string;
   subject?: string;
-  teacher?: string;
+  classCode?: string;
   room?: string;
-  type?: string;
-  week?: string;
   day?: string;
-  period?: string | number;
+  period?: string;
+  week?: string;
 };
+
 
 
 export default function StudentTimetablePage() {
@@ -45,12 +45,16 @@ export default function StudentTimetablePage() {
     return matchesSearch && matchesDay;
   });
 
-  const groupedByWeek = filteredTimetables.reduce((acc, item) => {
+  const groupedByWeek = filteredTimetables.reduce<Record<string, Timetable[]>>(
+  (acc, item) => {
     const week = item.week || "Chưa xác định";
     if (!acc[week]) acc[week] = [];
     acc[week].push(item);
     return acc;
-  }, {});
+  },
+  {}
+);
+
 
   const weekDays = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"];
 

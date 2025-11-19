@@ -1,6 +1,8 @@
 "use client";
 import { BookOpen, Calendar, Award, Bell, TrendingUp, Clock, CheckCircle, Users } from "lucide-react";
 
+
+
 export default function StudentHome() {
   const quickLinks = [
     { 
